@@ -42,12 +42,14 @@ public class PlayerInput : MonoBehaviour {
             {
                 movement.FreezePlayer();
                 manager.TelescopeZoomOn();
+                interaction.SetInteractionOngoing("Telescope");
             }
         }
         else
         {
             manager.TelescopeZoomOff();
             movement.UnfreezePlayer();
+            interaction.SetInteractionOngoing("");
         }
 
         /*

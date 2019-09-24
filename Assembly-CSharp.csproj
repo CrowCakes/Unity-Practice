@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Managers\Interaction.cs" />
     <Compile Include="Assets\Scripts\Managers\InteractManager.cs" />
     <Compile Include="Assets\Scripts\Managers\ObjectMaker.cs" />
+    <Compile Include="Assets\Scripts\Managers\SoundManager.cs" />
     <Compile Include="Assets\Scripts\Managers\UIManager.cs" />
     <Compile Include="Assets\Scripts\Objects\Firebolt.cs" />
     <Compile Include="Assets\Scripts\Objects\FoxFire.cs" />
@@ -680,6 +681,14 @@
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
       <Project>{5A9A778A-583F-0193-B9A9-0459C09F7652}</Project>
       <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
+    <ProjectReference Include="NavMeshComponentsEditor.csproj">
+      <Project>{4835804B-53BF-EC5C-EB71-9935F3AEFAC3}</Project>
+      <Name>NavMeshComponentsEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="NavMeshComponents.csproj">
+      <Project>{7E5DEFF0-793D-6383-A95F-F2896FABD553}</Project>
+      <Name>NavMeshComponents</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

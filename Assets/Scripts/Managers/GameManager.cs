@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 
 public class GameManager : MonoBehaviour {
     private const int roomDistanceOffset = 20;
@@ -12,6 +13,9 @@ public class GameManager : MonoBehaviour {
     public GameObject roomPrefab;
 
     public Camera minimap;
+    public Interaction interact;
+
+    public NavMeshSurface navMesh;
 
     //reference to the player object
     GameObject player;
@@ -301,6 +305,9 @@ public class GameManager : MonoBehaviour {
             //turn off the barrier if it did not make an enemy
             foo.GetComponent<Room>().ToggleBarriersOff();
         }
+
+        navMesh.BuildNavMesh();
+
         //set the map icon for minimap
         foo.GetComponent<Room>().SetIconColor(bar + 1);
         //set the color
@@ -526,12 +533,15 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    void Freeze() {
+    void Freeze()
+    {
+        interact.SetInteractionOngoing("Pause");
         Time.timeScale = 0f;
     }
 
     void Unfreeze() {
         Time.timeScale = 1f;
+        interact.SetInteractionOngoing("");
     }
 
     public void ToggleMap() {

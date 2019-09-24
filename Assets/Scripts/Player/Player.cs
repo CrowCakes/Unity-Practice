@@ -16,6 +16,7 @@ public class Player : MonoBehaviour {
     Text hpText;
 
     GameManager manager;
+    Interaction interaction;
 
     public Transform effect;
 
@@ -23,6 +24,7 @@ public class Player : MonoBehaviour {
     public float limitHP = 100.0f;
     float maxHP;
     float hp;
+    float prevHP;
     bool isDamaged = false;
     bool isDead = false;
     bool isExploding = false;
@@ -38,6 +40,7 @@ public class Player : MonoBehaviour {
         tColor = 0f;
 
         manager = FindObjectOfType<GameManager>();
+        interaction = FindObjectOfType<Interaction>();
 
         hpSlider = FindObjectOfType<Slider>();
         hpText = hpSlider.GetComponentInChildren<Text>();
@@ -49,7 +52,7 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //TODO find why this isn't working
+
         if (isDead && !isExploding)
         {
             //only once
@@ -134,7 +137,8 @@ public class Player : MonoBehaviour {
     /// Fades the Damage Flash effect to transparent over fadeTime.
     /// </summary>
     void FlashOff() {
-        
+        isDamaged = false;
+
         if (tColor <= 1f)
         {
             tColor += Time.deltaTime / fadeTime;
@@ -146,7 +150,8 @@ public class Player : MonoBehaviour {
     }
 
     void FlashOn() {
-        Debug.Log("Damage flash on");
+        //Debug.Log("Damage flash on");
+        isDamaged = true;
         manager.GetDamageFlash().color = flashOn;
         //manager.GetDamageFlash().transform.GetComponent<Animator>().SetTrigger("flashon");
     }
@@ -165,7 +170,6 @@ public class Player : MonoBehaviour {
     }
 
     public void SetIsDamaged(bool b) {
-        //if (b) print("Player.SetIsDamaged(): " + b);
         isDamaged = b;
     }
 

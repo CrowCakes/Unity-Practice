@@ -13,7 +13,7 @@ public class LampEnemy : Enemy {
     //patrol
     List<Vector3> points = new List<Vector3>();
     private int destPoint = 0;
-    //private NavMeshAgent agent;
+    private NavMeshAgent agent;
 
     //the center of the room the enemy is in
     Vector3 roomCenter;
@@ -24,32 +24,41 @@ public class LampEnemy : Enemy {
         player = GameObject.FindWithTag("Player");
         vision = transform.GetChild(0).gameObject.GetComponent<VisionPoint>();
 
-        //agent = gameObject.GetComponent<NavMeshAgent>();
-        //if (agent == null) {
-        //    Debug.Log("failed to fetch the NavMeshAgent component");
-        //}
+        agent = gameObject.GetComponent<NavMeshAgent>();
+        if (agent == null) {
+            Debug.Log("failed to fetch the NavMeshAgent component");
+        }
         //agent.autoBraking = false;
-        //agent.enabled = false;
+        agent.enabled = false;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Start()
+    {
+        SetCenter(roomCenter);
+    }
+
+    // Update is called once per frame
+    void Update () {
+
         CheckVision();
 
         if (!isAlerted)
         {
             player.GetComponent<Player>().SetIsDamaged(false);
             transform.GetChild(1).gameObject.GetComponent<Light>().color = new Color(0, hue, 0);
-            GotoNextPoint();
+            //GotoNextPoint();
+            if (!agent.enabled) agent.enabled = true;
+            if (!agent.pathPending && agent.remainingDistance < 1f && !agent.isStopped) AgentGoToNextPoint();
             
-            //if (agent.isStopped == true) {
-            //    agent.isStopped = false;
-            //}
+            if (agent.isStopped) {
+               agent.isStopped = false;
+            }
             //if (!agent.pathPending && agent.remainingDistance < 0.5f)
             //    GotoNextPoint();
         }
         else {
-            //agent.isStopped = true;
+            agent.isStopped = true;
+
             transform.GetChild(1).gameObject.GetComponent<Light>().color = new Color(hue, 0, 0);
             player.GetComponent<Player>().SetIsDamaged(true);
             player.GetComponent<Player>().DrainHP(damage);
@@ -57,10 +66,12 @@ public class LampEnemy : Enemy {
 
         if (roomNumber == manager.GetPlayerCurrentRoom() || isZoom)
         {
+            if (roomNumber == manager.GetPlayerCurrentRoom()) { vision.enabled = true; }
             TurnLightOn();
         }
         else
         {
+            vision.enabled = false;
             TurnLightOff();
         }
 
@@ -166,4 +177,41 @@ public class LampEnemy : Enemy {
             destPoint = (destPoint + 1) % points.Count;
         }
     }
+
+    void AgentGoToNextPoint() {
+        //Debug.Log("Reached waypoint #" + currentWaypoint);
+        agent.SetDestination(points[destPoint]);
+        destPoint = (destPoint + 1) % 4;
+    }
 }
+
+/*
+class Seeker
+{
+    public NavMeshAgent agent;
+    public float stoppingDist = 1f;
+
+    Vector3[] waypoints = {new Vector3(5.5f, 0f, 5.5f),
+            new Vector3(-5.5f, 0f, 5.5f),
+            new Vector3(-5.5f, 0f, -5.5f),
+            new Vector3(5.5f, 0f, -5.5f) };
+    int currentWaypoint = 0;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Debug.Log("Starting patrol");
+        agent.SetDestination(waypoints[currentWaypoint]);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (!agent.pathPending && agent.remainingDistance < stoppingDist)
+        {
+            Debug.Log("Reached waypoint #" + currentWaypoint);
+            currentWaypoint = (currentWaypoint + 1) % 4;
+            agent.SetDestination(waypoints[currentWaypoint]);
+        }
+    }
+}*/

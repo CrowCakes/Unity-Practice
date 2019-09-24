@@ -38,9 +38,11 @@ public class DetectorEnemy : Enemy {
 
         if (roomNumber == manager.GetPlayerCurrentRoom() || isZoom)
         {
+            if (roomNumber == manager.GetPlayerCurrentRoom()) { vision.enabled = true; }
             TurnLightOn();
         }
         else {
+            vision.enabled = false;
             TurnLightOff();
         }
 	}
